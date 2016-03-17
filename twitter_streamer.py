@@ -15,28 +15,28 @@ auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
  
 api = tweepy.API(auth)
-count = 0
 status_array = []
 tweets_array = []
 
-for status in tweepy.Cursor(api.home_timeline).items(10):
-    # Process a single status
-    print str(count)+": "+status.text
-    status_array.append(status.text)
-    count = count + 1
+def twitter_streamer():
+	count = 0
+	for status in tweepy.Cursor(api.home_timeline).items(10):
+	    # Process a single status
+	    status_array.append(status.text)
+	    count = count + 1
+
+	count = 0
+	for tweet in tweepy.Cursor(api.user_timeline).items():
+	    tweets_array.append(tweet.text)
+	    count = count + 1
+
+	for prop in status_array:
+		result = main_classifier(prop)
+		print prop+': '+result
+
+	for prop in tweets_array:
+		result = main_classifier(prop)
+		print prop+': '+result
 
 
-count = 0    
-for tweet in tweepy.Cursor(api.user_timeline).items():
-    print str(count)+": "+tweet.text
-    tweets_array.append(tweet.text)
-    count = count + 1
-
-# print status_array
-# # print tweets_array
-# test = 'I dilshad tired this sunday'
-# result = main_classifier(test)
-# print result
-for prop in status_array:
-	result = main_classifier(prop)
-	print result
+twitter_streamer()
