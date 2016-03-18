@@ -15,7 +15,6 @@ tweets_data = []
 
 def tweet_data_sender( threadName, delay):
 	count = 0
-	print len(tweets_data)
 	flag = 'changed'
 	previous_val = 0
 	
@@ -51,7 +50,7 @@ def thread_starter():
 
 def twitter_keyword_streamer():
 
-	thread_starter()
+	#thread_starter()
     #This handles Twitter authetification and the connection to Twitter Streaming API
 	l = StdOutListener()
 	auth = OAuthHandler(consumer_key, consumer_secret)

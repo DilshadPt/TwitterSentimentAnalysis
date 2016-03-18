@@ -38,5 +38,4 @@ def twitter_streamer():
 		result = main_classifier(prop)
 		print prop+': '+result
 
-
 twitter_streamer()
