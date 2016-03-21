@@ -10,6 +10,10 @@ import json
 import thread
 from main_analyzer import main_classifier
 import time
+import csv
+
+c = csv.writer(open("keyword_streamer_output.csv", "wb"))
+c.writerow(["Tweet", "Result"])
 
 tweets_data = []
 
@@ -28,6 +32,7 @@ def tweet_data_sender( threadName, delay):
 			tweets_data[length-1]
 			result = main_classifier(tweets_data[length-1])
 			print tweets_data[length-1]+':  '+result
+			c.writerow([tweets_data[length-1].encode("utf-8"), result.encode("utf-8")])
 			previous_val = length-1
 			flag = 'notchanged'
 
@@ -50,7 +55,7 @@ def thread_starter():
 
 def twitter_keyword_streamer():
 
-	#thread_starter()
+	thread_starter()
     #This handles Twitter authetification and the connection to Twitter Streaming API
 	l = StdOutListener()
 	auth = OAuthHandler(consumer_key, consumer_secret)

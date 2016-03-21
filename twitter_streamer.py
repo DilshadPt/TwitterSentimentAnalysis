@@ -5,6 +5,14 @@ from tweepy.streaming import StreamListener
 
 from main_analyzer import main_classifier
 
+import csv
+
+ct = csv.writer(open("tweet_result.csv", "wb"))
+ct.writerow(["Tweet", "Result"])
+
+cs = csv.writer(open("status_result.csv", "wb"))
+cs.writerow(["Tweet", "Result"])
+
 consumer_key = 'FDlTtEIvmDP7mtRkDazVCDsos'
 consumer_secret = 'uS0hFpvqj53fWia5PilSuG6Vht3JViGMXOgmJWDax023R09I77'
 access_token = '136742287-krmFGhrFa9PlwiKPhUKeJ6KwchkAlhwiLgNoHK3M'
@@ -33,9 +41,12 @@ def twitter_streamer():
 	for prop in status_array:
 		result = main_classifier(prop)
 		print prop+': '+result
+		cs.writerow([prop.encode("utf-8"), result.encode("utf-8")])
+
 
 	for prop in tweets_array:
 		result = main_classifier(prop)
 		print prop+': '+result
+		ct.writerow([prop.encode("utf-8"), result.encode("utf-8")])		
 
 twitter_streamer()
