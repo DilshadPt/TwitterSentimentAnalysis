@@ -82,7 +82,6 @@ class StdOutListener(StreamListener):
         tweet = json.loads(data)
         tweets_data.append(tweet['text'])
         return True
-        size = len(tweets_data)
 
     def on_error(self, status):
         print status
@@ -102,6 +101,7 @@ def twitter_keyword_streamer():
 	auth = OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_token, access_token_secret)
 	stream = Stream(auth, l)
+	print "here in"
     #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
 	# stream.filter(track=['python', 'javascript', 'ruby'])
 	stream.filter(follow=['18839785', '136742287', '2903430392'])
