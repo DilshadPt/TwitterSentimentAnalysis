@@ -13,9 +13,22 @@ import time
 import csv
 
 c = csv.writer(open("keyword_streamer_output.csv", "wb"))
-c.writerow(["Tweet", "Result"])
+c.writerow(["Tweet", "Result", "Stress"])
 
 tweets_data = []
+result_array = []
+
+def stress_finder(array):
+	n_count = 0;
+	p_count = 0;
+	for prop in array:
+		if prop == 'negative':
+			n_count = n_count + 1
+		else:
+			p_count = p_count + 1
+	total = len(array)
+	stress_perc = (n_count*100) / total
+	return stress_perc
 
 def tweet_data_sender( threadName, delay):
 	count = 0
@@ -28,13 +41,17 @@ def tweet_data_sender( threadName, delay):
 		if previous_val != (length-1): 
 			flag = 'changed'
         
-		if ((length > 0) and (flag == 'changed')):
+		if ((length > 0) and (flag == 'changed') and (length <=11)):
 			tweets_data[length-1]
 			result = main_classifier(tweets_data[length-1])
 			print tweets_data[length-1]+':  '+result
-			c.writerow([tweets_data[length-1].encode("utf-8"), result.encode("utf-8")])
+			result_array.append(result)
+			
 			previous_val = length-1
 			flag = 'notchanged'
+			stress = stress_finder(result_array)
+			print 'Stress Percentage  '+str(stress)+'%'
+			c.writerow([tweets_data[length-1].encode("utf-8"), result.encode("utf-8"), stress])
 
 class StdOutListener(StreamListener):
 
@@ -63,6 +80,7 @@ def twitter_keyword_streamer():
 	stream = Stream(auth, l)
 
     #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
-	stream.filter(track=['python', 'javascript', 'ruby'])
+	# stream.filter(track=['python', 'javascript', 'ruby'])
+	stream.filter(follow=['18839785'])
 
 twitter_keyword_streamer()
