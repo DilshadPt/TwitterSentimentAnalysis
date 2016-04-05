@@ -19,6 +19,7 @@ c.writerow(["Tweet", "Result", "Stress"])
 
 tweets_data = []
 result_array = []
+stress_array = []
 
 def stress_finder(array):
 	n_count = 0;
@@ -37,7 +38,10 @@ def tweet_data_sender( threadName, delay):
 	flag = 'changed'
 	previous_val = 0
 	check = 'notdone'
-
+	min_stress = 'null'
+	max_stress = 'null'
+	avg_stress = 0
+    
 	while (check == 'notdone'):
 		time.sleep(delay)
 		length = len(tweets_data)
@@ -53,10 +57,20 @@ def tweet_data_sender( threadName, delay):
 			previous_val = length-1
 			flag = 'notchanged'
 			stress = stress_finder(result_array)
+			if ((min_stress == 'null') and (max_stress == 'null')):
+				min_stress = stress
+				max_stress = stress
+			if (stress < min_stress):
+				min_stress = stress
+			if (stress > max_stress):
+				max_stress = stress
+
+			stress_array.append(stress)
+
 			print 'Stress Percentage  '+str(stress)+'%'
 			c.writerow([tweets_data[length-1].encode("utf-8"), result.encode("utf-8"), stress])
 
-		if (length > 3):
+		if (length > 10):
 			check = 'done'
 
 	print 'out of the box'
@@ -75,12 +89,24 @@ def tweet_data_sender( threadName, delay):
 		level = 'very severe'
 
 	print 'Stress level = '+level
+	print "min_stress"+str(min_stress)
+	print "max_stress"+str(max_stress)
+	
+
+	avg_stress = sum(stress_array)/len(stress_array)
+	print sum(stress_array)
+	print len(stress_array)
+	print "Average"+str(avg_stress)
+	c.writerow(["Minimum Stress", "Maximum Stress", "Average"])
+	c.writerow([min_stress, max_stress, avg_stress])
+
 
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data)
-        tweets_data.append(tweet['text'])
+        append_text = tweet['text'].replace(";", "")  # to avoid semi colon breaking csv, replaces semicolon with null
+        tweets_data.append(append_text)
         return True
 
     def on_error(self, status):
