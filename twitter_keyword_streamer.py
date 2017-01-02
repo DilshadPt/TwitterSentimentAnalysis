@@ -13,9 +13,10 @@ import time
 import csv
 import sys
 
-c = csv.writer(open("keyword_streamer_output.csv", "wb"))
+f = open("keyword_streamer_output.csv", "wb")
+c = csv.writer(f)
 c.writerow(["Tweet", "Result", "Stress"])
-
+f.close
 
 tweets_data = []
 result_array = []
@@ -68,7 +69,11 @@ def tweet_data_sender( threadName, delay):
 			stress_array.append(stress)
 
 			print 'Stress Percentage  '+str(stress)+'%'
+
+			f = open("keyword_streamer_output.csv", "a")
+			c = csv.writer(f)
 			c.writerow([tweets_data[length-1].encode("utf-8"), result.encode("utf-8"), stress])
+			f.close
 
 		if (length > 10):
 			check = 'done'
@@ -97,8 +102,12 @@ def tweet_data_sender( threadName, delay):
 	print sum(stress_array)
 	print len(stress_array)
 	print "Average"+str(avg_stress)
+
+	f = open("keyword_streamer_output.csv", "wb")
+	c = csv.writer(f)
 	c.writerow(["Minimum Stress", "Maximum Stress", "Average"])
 	c.writerow([min_stress, max_stress, avg_stress])
+	f.close
 
 
 class StdOutListener(StreamListener):
