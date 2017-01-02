@@ -103,7 +103,7 @@ def tweet_data_sender( threadName, delay):
 	print len(stress_array)
 	print "Average"+str(avg_stress)
 
-	f = open("keyword_streamer_output.csv", "wb")
+	f = open("keyword_streamer_output.csv", "a")
 	c = csv.writer(f)
 	c.writerow(["Minimum Stress", "Maximum Stress", "Average"])
 	c.writerow([min_stress, max_stress, avg_stress])
